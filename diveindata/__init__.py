@@ -92,7 +92,7 @@ class DataInfo(object):
             self.columns[col]['mean'] = self.data[col].mean()
             self.columns[col]['std'] = self.data[col].std()
 
-    def bar_groups(self, categories=[], num_col=None, aggs=['sum']):
+    def bar_groups(self, categories=[], num_col=None, aggs=['sum'], level=0):
 
         def group_data(data, category):
             grouped_data = data.groupby(category)
@@ -126,5 +126,6 @@ class DataInfo(object):
 
         def cats():
             return [c if type(c) is str else c[0] for c in categories]
-        return group_data(filtered_data, cats())
+        gd = group_data(filtered_data, cats()).unstack(level=level)
+        return gd.sort_values(by=gd.columns[level])
 
